@@ -1,0 +1,28 @@
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../shared/pm-styles.html">
+
+<dom-module id="pm-details">
+  <template>
+    <style include="pm-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+    </style>
+
+    <div class="card">
+      <div class="circle">3</div>
+      <h1>Details</h1>
+      <p>This is a details page. It should really have a bunch of images and maybe even a gallery, but we don't have that for now.</p>
+    </div>
+  </template>
+
+  <script>
+    class PmDetails extends Polymer.Element {
+      static get is() { return 'pm-details'; }
+    }
+
+    window.customElements.define(PmDetails.is, PmDetails);
+  </script>
+</dom-module>

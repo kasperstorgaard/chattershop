@@ -1,0 +1,29 @@
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../shared/pm-styles.html">
+
+<dom-module id="pm-home">
+  <template>
+    <style include="pm-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+    </style>
+
+    <div class="card">
+      <div class="circle">1</div>
+      <h1>Home</h1>
+      <p>This is the home page. On the top we are going to put a nice relevant high def image, and some description.</p>
+      <p>We should probably also direct you to the products and categories and such</p>
+    </div>
+  </template>
+
+  <script>
+    class PmHome extends Polymer.Element {
+      static get is() { return 'pm-home'; }
+    }
+
+    window.customElements.define(PmHome.is, PmHome);
+  </script>
+</dom-module>

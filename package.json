@@ -1,5 +1,5 @@
 {
-  "name": "polymer-starter-kit",
+  "name": "poly-mobx",
   "version": "0.1.0",
   "devDependencies": {
     "babel-core": "^6.25.0",

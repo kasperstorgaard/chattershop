@@ -2,10 +2,10 @@
   "entrypoint": "index.html",
   "shell": "src/my-app.html",
   "fragments": [
-    "src/my-view1.html",
-    "src/my-view2.html",
-    "src/my-view3.html",
-    "src/my-view404.html"
+    "src/pages/home/pm-home.html",
+    "src/pages/group/pm-group.html",
+    "src/pages/details/pm-details.html",
+    "src/pages/not-found/pm-not-found.html"
   ],
   "sources": [
     "src/**/*",

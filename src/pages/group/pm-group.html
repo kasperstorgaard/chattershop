@@ -1,0 +1,29 @@
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../shared/pm-styles.html">
+
+<dom-module id="pm-group">
+  <template>
+    <style include="pm-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+    </style>
+
+    <div class="card">
+      <div class="circle">2</div>
+      <h1>Group</h1>
+      <p>This is the group page, where you could show a number of products that belong in a group</p>
+      <p>For now let's just show this text</p>
+    </div>
+  </template>
+
+  <script>
+    class PmGroup extends Polymer.Element {
+      static get is() { return 'pm-group'; }
+    }
+
+    window.customElements.define(PmGroup.is, PmGroup);
+  </script>
+</dom-module>
