@@ -21,5 +21,8 @@
     "serve": "concurrently \"webpack --watch\" \"polymer serve\"",
     "test": "polymer test",
     "test:integration": "polymer build # test that psk builds without error with the CLI"
+  },
+  "dependencies": {
+    "mobx": "^3.4.0"
   }
 }
