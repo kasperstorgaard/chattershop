@@ -20,27 +20,15 @@ module.exports = {
       {
         test: /\.html$/,
         use: [
-          {
-            loader: 'babel-loader',
-            options: {
-              presets: ['env'],
-              plugins: ['syntax-dynamic-import']
-            }
-          },
-          {
-            loader: 'polymer-webpack-loader'
-          }
+          { loader: 'awesome-typescript-loader' },
+          { loader: 'polymer-webpack-loader' }
         ]
       },
       {
-        test: /\.js$/,
+        test: /\.ts$/,
+        exclude: /node_modules\//,
         use: [
-          {
-            loader: 'babel-loader',
-            options: {
-              presets: ['env']
-            }
-          }
+          { loader: 'awesome-typescript-loader' }
         ]
       }
     ]

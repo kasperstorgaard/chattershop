@@ -1,0 +1,169 @@
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../shared/pm-styles.html">
+
+<dom-module id="pm-chat-box">
+  <template>
+    <style include="pm-styles">
+      :host {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      
+      paper-button {
+        background: #ddd;
+        margin: 0;
+      }
+
+      .text-box {
+        display: flex;
+        flex-basis: 100%;
+      }
+
+      #textarea {
+        flex-basis: 100%;
+        padding: 0 1rem;
+        background:#fff;
+      }
+
+      .messages {
+        display: flex;
+        flex-wrap: wrap;
+        flex-basis: 100%;
+      }
+
+      .message {
+        display: flex;
+        flex-basis: 100%;
+        margin: 0 0 0.7rem;
+      }
+
+      .message.self {
+        justify-content: flex-end;
+      }
+
+      .message p {
+        display: inline-block;
+        padding: 0.7rem 1rem;
+        margin: 0;
+        background: #ccd;
+      }
+
+      .message.self p {
+        background: #dcd;
+      }
+    </style>
+    <div class="messages">
+      <template is="dom-repeat" items=[[messages]] as="message">
+        <div class$="message [[_messageClass(userId, message)]]">
+          <p>[[message.text]]</p>
+        </div>
+      </template>
+    </div>
+    <div class="text-box">
+      <paper-textarea id="textarea" value={{draft}} hidden$=[[!open]]></paper-textarea>
+      <paper-button hidden=[[open]] on-tap=_open>chat with us :)</paper-button>
+      <paper-button hidden=[[!open]] on-tap=_send>send</paper-button>
+    </div>
+  </template>
+
+  <script>
+    class PmChatBox extends Polymer.Element {
+      static get is() { return 'pm-chat-box'; }
+
+      static get properties() {
+        return {
+          userId: String,
+          open: {
+            type: Boolean,
+            value: false,
+            notify: true,
+            reflectToAttribute: true
+          },
+          messages: {
+            type: Array,
+            value: () => []
+          },
+          draft: {
+            type: String,
+            value: ''
+          },
+          _textarea: Object,
+          _shiftKeyDown: Boolean
+        }
+      }
+
+      static get observers() {
+        return [
+          '_focus(open)'
+        ];
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+
+        this._textarea = this.$.textarea.inputElement.textarea;
+        this._textarea.addEventListener('input', e => this._onInput(e));
+
+        this._textarea.addEventListener('keydown', e => this._shiftKeyDown = e.shiftKey);
+        this._textarea.addEventListener('keyup', e => this._shiftKeyDown = !e.shiftKey);
+      }
+
+      _toggle() {
+        this.open = !this.open;
+      }
+
+      _focus(open = this.open) {
+        if (open) {
+          this.$.textarea.inputElement.textarea.focus();
+        }
+      }
+
+      _onKeydown(e) {
+        this._shiftKeyDown = e.shiftKey;
+      }
+
+      _onKeyup(e) {
+        this._shiftKeyDown = !e.shiftKey;
+      }
+
+      _onInput(e) {
+        switch (e.inputType) {
+          case 'insertLineBreak': this._onEnter(e);
+        }
+      }
+
+      _onEnter(e) {
+        if (this._shiftKeyDown) {
+          return;
+        }
+
+        e.preventDefault();
+        this._send();
+      }
+
+      _send() {
+        this.dispatchEvent(new CustomEvent('send-message', {
+          bubbles: false,
+          cancelable: false,
+          detail: { message: this.draft }
+        }));
+
+        this.draft = '';
+        this._focus();
+      }
+
+      _open() {
+        this.open = true;
+      }
+
+      _messageClass(userId, message) {
+        return userId === message.userId ? 'self' : '';
+      }
+    }
+
+    window.customElements.define(PmChatBox.is, PmChatBox);
+  </script>
+</dom-module>

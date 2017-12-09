@@ -17,5 +17,9 @@
   },
   "globals": {
     "Polymer": true
+  },
+  "compilerOptions": {
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
   }
 }
