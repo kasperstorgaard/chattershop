@@ -13,6 +13,11 @@
 <link rel="import" href="./shared/pm-icons.html">
 <link rel="import" href="./components/chat-box/pm-chat-box.html">
 
+<link rel="lazy-import" href="src/pages/details/pm-details.html">
+<link rel="lazy-import" href="src/pages/group/pm-group.html">
+<link rel="lazy-import" href="src/pages/home/pm-home.html">
+<link rel="lazy-import" href="src/pages/not-found/pm-not-found.html">
+
 <dom-module id="pm-app">
   <template>
     <style>
@@ -123,30 +128,6 @@
   </template>
 
   <script>
-    import {PmAppStore} from "./stores/pm-app-store.ts";
-
-    function lazyImport(name) {
-      switch (name) {
-        case 'home': return import(
-          /* webpackChunkName: "pm-home" */
-          './pages/home/pm-home.html'
-        );
-        case 'group': return import(
-          /* webpackChunkName: "pm-group" */
-          './pages/group/pm-group.html'
-        );
-        case 'details': return import(
-          /* webpackChunkName: "pm-details" */
-          './pages/details/pm-details.html'
-        );
-        case 'not-found': return import(
-          /* webpackChunkName: "pm-not-found" */
-          './pages/not-found/pm-not-found.html'
-        );
-        default: return null;
-      }
-    }
-
     class PmApp extends Polymer.Element {
 
       static get is() { return 'pm-app'; }
@@ -175,22 +156,11 @@
         ];
       }
 
-      connectedCallback() {
-        super.connectedCallback();
-
-        this._store = new PmAppStore();
-        this._store.connect(state => this._state = state);
-      }
-
       _routePageChanged(page) {
-        // Polymer 2.0 will call with `undefined` on initialization.
-        // Ignore until we are properly called with a string.
         if (page === undefined) {
           return;
         }
 
-        // If no page was found in the route data, page will be an empty string.
-        // Deault to 'home' in that case.
         this.page = page || 'home';
 
         // Close a non-persistent drawer when the page & route are changed.
@@ -200,11 +170,8 @@
       }
 
       _pageChanged(page) {
-        const result = lazyImport(page);
-
-        if (!result) {
-          this._showNotFound();
-        }
+        const resolvedPageUrl = this.resolveUrl(`pages/${page}/pm-${page}.html`);
+        Polymer.importHref(resolvedPageUrl, null, this._showNotFound.bind(this), true);
       }
 
       _showNotFound() {

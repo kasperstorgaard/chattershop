@@ -44,36 +44,24 @@
     <meta name="msapplication-tap-highlight" content="no">
 
     <script>
-      // Register the base URL
-      const baseUrl = document.querySelector('base').href;
+      window.Polymer = {rootPath: '/'};
 
-      // // Load and register pre-caching Service Worker
-      // if ('serviceWorker' in navigator) {
-      //   window.addEventListener('load', function() {
-      //     navigator.serviceWorker.register(baseUrl + 'service-worker.js');
-      //   });
-      // }
-    </script>
-    <script>
-      if(window.fetch) {
-        var refScript = document.getElementsByTagName('script')[0];
-        var script = document.createElement('script');
-        script.src = 'bower_components/webcomponentsjs/custom-elements-es5-adapter.js';
-        refScript.parentNode.insertBefore(script, refScript); 
+      // Load and register pre-caching Service Worker
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('service-worker.js', {
+            scope: Polymer.rootPath,
+          });
+        });
       }
-    </script>
-    <script>
-      document.addEventListener('WebComponentsReady', function webcomponentsready() {
-        var refScript = document.getElementsByTagName('script')[0];
-        var script = document.createElement('script');
-        script.src = 'dist/main.bundle.js';
-        refScript.parentNode.insertBefore(script, refScript);
-        document.removeEventListener('WebComponentsReady', webcomponentsready, false);
-      }, false);
     </script>
 
     <!-- Load webcomponents-loader.js to check and load any polyfills your browser needs -->
     <script src="bower_components/webcomponentsjs/webcomponents-loader.js"></script>    
+
+    <!-- Load your application shell -->
+    <link rel="import" href="src/pm-app.html">
+
     <style>
       body {
         margin: 0;
