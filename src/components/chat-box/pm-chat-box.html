@@ -10,11 +10,13 @@
       :host {
         display: flex;
         flex-wrap: wrap;
+        position: relative;
       }
       
       paper-button {
-        background: #ddd;
         margin: 0;
+        border-radius: 0 3px 3px 0;
+        background: rgba(0, 0, 0, .1);
       }
 
       .text-box {
@@ -28,7 +30,7 @@
         background:#fff;
       }
 
-      .messages {
+      #messages {
         display: flex;
         flex-wrap: wrap;
         flex-basis: 100%;
@@ -55,12 +57,15 @@
         background: #dcd;
       }
     </style>
-    <div class="messages">
+    <div id="messages">
       <template is="dom-repeat" items=[[messages]] as="message">
         <div class$="message [[_messageClass(userId, message)]]">
           <p>[[message.text]]</p>
         </div>
       </template>
+      <div hidden$=[[!waiting]] class="message">
+        <p>...</p>
+      </div>
     </div>
     <div class="text-box">
       <paper-textarea id="textarea" value={{draft}} hidden$=[[!open]]></paper-textarea>
@@ -86,6 +91,7 @@
             type: Array,
             value: () => []
           },
+          waiting: Boolean,
           draft: {
             type: String,
             value: ''
@@ -97,7 +103,8 @@
 
       static get observers() {
         return [
-          '_focus(open)'
+          '_focus(open)',
+          '_resize(messages.*)'
         ];
       }
 
@@ -106,7 +113,6 @@
 
         this._textarea = this.$.textarea.inputElement.textarea;
         this._textarea.addEventListener('input', e => this._onInput(e));
-
         this._textarea.addEventListener('keydown', e => this._shiftKeyDown = e.shiftKey);
         this._textarea.addEventListener('keyup', e => this._shiftKeyDown = !e.shiftKey);
       }
@@ -161,6 +167,10 @@
 
       _messageClass(userId, message) {
         return userId === message.userId ? 'self' : '';
+      }
+
+      _resize() {
+        this.$.messages
       }
     }
 

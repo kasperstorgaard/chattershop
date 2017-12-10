@@ -69,10 +69,14 @@
         box-sizing: border-box;
         flex-direction: row-reverse;
         position: absolute;
+        max-height: 40vh;
+        align-items: flex-end;
+        overflow-y: scroll;
+        padding: 1rem;
         bottom: 0;
         right: 0;
         width: 100%;
-        padding: 1rem;
+        background: rgba(0, 0, 0, .07);
       }
 
       pm-chat-box[open] {
@@ -125,6 +129,7 @@
           <pm-chat-box
             user-id=[[_state.userId]]
             messages=[[_state.messages]]
+            waiting=[[_state.waiting]]
             on-send-message=_onMessage></pm-chat-box>
         </div>
       </app-header-layout>
