@@ -10,8 +10,10 @@
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+
 <link rel="import" href="./shared/pm-icons.html">
 <link rel="import" href="./components/chat-box/pm-chat-box.html">
+<link rel="import" href="./stores/pm-app-store.html">
 
 <link rel="lazy-import" href="src/pages/details/pm-details.html">
 <link rel="lazy-import" href="src/pages/group/pm-group.html">
@@ -78,6 +80,8 @@
       }
     </style>
 
+    <pm-app-store id="store" state={{_state}}></pm-app-store>
+
     <app-location route="{{route}}" url-space-regex="^[[rootPath]]"></app-location>
     <app-route
       route="{{route}}"
@@ -139,14 +143,13 @@
             reflectToAttribute: true,
             observer: '_pageChanged',
           },
-          _store: Object,
-          _state: Object,
           routeData: Object,
           subroute: String,
           rootPath: {
             type: String,
             value: '/'
-          }
+          },
+          _state: Object,
         };
       }
 
@@ -154,6 +157,15 @@
         return [
           '_routePageChanged(routeData.page)',
         ];
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+
+        this.addEventListener('action', event => {
+          const {name, payload} = event.detail;
+          this.$.store.dispatch(name, payload);
+        });
       }
 
       _routePageChanged(page) {
@@ -179,7 +191,10 @@
       }
 
       _onMessage(e) {
-        this._store.sendMessage(e.detail.message);
+        this.dispatchEvent(new CustomEvent('action', {
+          bubbles: true,
+          detail: { name: "MESSAGE_SEND", payload: e.detail }
+        }));
       }
     }
 

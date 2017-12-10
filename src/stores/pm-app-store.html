@@ -1,34 +1,64 @@
-<script>
-  import {observable, action, autorun} from "mobx";
-  import {PmChatStore} from "./chat/pm-chat-store";
+<dom-module id="pm-app-store">
+  <script>
+    class PmAppStore extends Polymer.Element {
+      static get is() { return 'pm-app-store'; }
 
-  interface IPmAppState {
-    userId: string;
-    messages: IMessage[];
-  }
+      static get properties() {
+        return {
+          state: {
+            type: Object,
+            notify: true
+          },
+          _messages: {
+            type: Array,
+            value: () => []
+          },
+          _userId: {
+            type: String,
+            value: fakeGuid()
+          }
+        }
+      }
 
-  interface IMessage {
-    userId: string;
-    text: string;
-  }
+      constructor() {
+        super();
+        this.state = this._getState();
+      }
 
-  export class PmAppStore implements IPmAppState {
-    //todo: generate from api, should not be able to be tampered with.
-    userId: string = Math.random().toString().replace("0.", "I");
-    @observable messages: IMessage[] = [];
+      dispatch(name) {
+        const action = this._actions[name];
+        if (!action) {
+          throw new Error(`action '${name}' is not defined`);
+        }
+        const args = [].slice.call(arguments, 1);
+        action.apply(this, args);
+      }
 
-    @action sendMessage = (payload: string): void => {
-      this.messages.push({
-        userId: this.userId,
-        text: payload
-      });
+      get _actions() {
+        return {
+          'MESSAGE_SEND': this._sendMessage
+        }
+      }
+
+      _getState() {
+        return {
+          userId: this._userId,
+          messages: this._messages
+        }
+      }
+
+      _sendMessage(payload) {
+        this.push('state.messages', {
+          userId: this._userId,
+          text: payload
+        });
+      }
     }
 
-    connect(cb: (state: IPmAppState) => void) {
-      autorun(() => cb({
-        messages: this.messages.slice(),
-        userId: this.userId
-      }));
+    function fakeGuid() {
+      return Math.random().toString().replace("0.", "id.");
     }
-  }
-</script>
+
+    window.customElements.define(PmAppStore.is, PmAppStore);
+  </script>
+</dom-module>

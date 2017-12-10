@@ -148,7 +148,7 @@
         this.dispatchEvent(new CustomEvent('send-message', {
           bubbles: false,
           cancelable: false,
-          detail: { message: this.draft }
+          detail: this.draft
         }));
 
         this.draft = '';
