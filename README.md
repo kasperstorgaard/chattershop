@@ -1,5 +1,4 @@
-# Polymer 2 mobx exploration
-based on https://github.com/Banno/polymer-2-starter-kit-webpack by https://github.com/ChadKillingsworth
+# A shop app with a chat bot sprinkle
 
 ## Get Started
 Install:

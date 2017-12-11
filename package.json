@@ -1,5 +1,5 @@
 {
-  "name": "poly-mobx",
+  "name": "chattershop",
   "version": "0.1.0",
   "devDependencies": {
     "awesome-typescript-loader": "^3.4.1",
@@ -18,7 +18,7 @@
     "lint": "npm run lint:javascript",
     "lint:javascript": "eslint . --ext js,html --ignore-path .gitignore",
     "postinstall": "bower install",
-    "serve": "polymer serve",
+    "dev": "polymer serve",
     "test": "polymer test",
     "test:integration": "polymer build # test that psk builds without error with the CLI"
   }

@@ -1,5 +1,5 @@
 {
-  "name": "poly-mobx",
+  "name": "chattershop",
   "author": "kasperstorgaard",
   "dependencies": {
     "app-layout": "PolymerElements/app-layout#^2.0.0",

@@ -20,7 +20,7 @@
 <link rel="lazy-import" href="src/pages/home/pm-home.html">
 <link rel="lazy-import" href="src/pages/not-found/pm-not-found.html">
 
-<dom-module id="pm-app">
+<dom-module id="cs-app">
   <template>
     <style>
       :host {
@@ -109,7 +109,7 @@
 
         <app-header slot="header" condenses reveals effects="waterfall">
           <app-toolbar>
-            <paper-icon-button icon="pm-icons:menu" drawer-toggle></paper-icon-button>
+            <paper-icon-button icon="cs-icons:menu" drawer-toggle></paper-icon-button>
             <div main-title>My App</div>
           </app-toolbar>
         </app-header>
@@ -139,7 +139,7 @@
   <script>
     class PmApp extends Polymer.Element {
 
-      static get is() { return 'pm-app'; }
+      static get is() { return 'cs-app'; }
 
       static get properties() {
         return {
