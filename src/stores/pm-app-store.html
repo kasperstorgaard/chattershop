@@ -1,0 +1,67 @@
+<dom-module id="pm-app-store">
+  <script>
+    class PmAppStore extends Polymer.Element {
+      static get is() { return 'pm-app-store'; }
+
+      static get properties() {
+        return {
+          state: {
+            type: Object,
+            notify: true,
+            value: () => ({
+              messages: [],
+              userId: fakeGuid(),
+              waiting: false
+            })
+          }
+        }
+      }
+
+      dispatch(name) {
+        const action = this._actions[name];
+        if (!action) {
+          throw new Error(`action '${name}' is not defined`);
+        }
+        const args = [].slice.call(arguments, 1);
+        console.info(name, args);
+        action.apply(this, args);
+      }
+
+      get _actions() {
+        return {
+          'MESSAGE_SEND': this._sendMessage,
+          'MESSAGE_RESPONSE': this._responseReceived
+        }
+      }
+
+      _sendMessage(text) {
+        this.push('state.messages', {
+          userId: this.state.userId,
+          text
+        });
+
+        this.set('state.waiting', true);
+
+        this._getResponse(text)
+          .then(response => this.dispatch('MESSAGE_RESPONSE', response));
+      }
+      
+      _getResponse(text) {
+        return fetch(`http://localhost:5000/api/v1/${text}`)
+          .then(resp => resp.text());
+      }
+
+      _responseReceived(text) {
+        const idx = this.state.messages.findIndex(message => message.id)
+        this.push('state.messages', { userId: 'bot', text });
+        this.set('state.waiting', false);
+      }
+    }
+
+    function fakeGuid() {
+      return Math.random().toString().replace("0.", "id.");
+    }
+
+    window.customElements.define(PmAppStore.is, PmAppStore);
+  </script>
+</dom-module>

@@ -10,8 +10,15 @@
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+
 <link rel="import" href="./shared/pm-icons.html">
 <link rel="import" href="./components/chat-box/pm-chat-box.html">
+<link rel="import" href="./stores/pm-app-store.html">
+
+<link rel="lazy-import" href="src/pages/details/pm-details.html">
+<link rel="lazy-import" href="src/pages/group/pm-group.html">
+<link rel="lazy-import" href="src/pages/home/pm-home.html">
+<link rel="lazy-import" href="src/pages/not-found/pm-not-found.html">
 
 <dom-module id="pm-app">
   <template>
@@ -62,16 +69,22 @@
         box-sizing: border-box;
         flex-direction: row-reverse;
         position: absolute;
+        max-height: 40vh;
+        align-items: flex-end;
+        overflow-y: scroll;
+        padding: 1rem;
         bottom: 0;
         right: 0;
         width: 100%;
-        padding: 1rem;
+        background: rgba(0, 0, 0, .07);
       }
 
       pm-chat-box[open] {
         width:100%;
       }
     </style>
+
+    <pm-app-store id="store" state={{_state}}></pm-app-store>
 
     <app-location route="{{route}}" url-space-regex="^[[rootPath]]"></app-location>
     <app-route
@@ -116,6 +129,7 @@
           <pm-chat-box
             user-id=[[_state.userId]]
             messages=[[_state.messages]]
+            waiting=[[_state.waiting]]
             on-send-message=_onMessage></pm-chat-box>
         </div>
       </app-header-layout>
@@ -123,30 +137,6 @@
   </template>
 
   <script>
-    import {PmAppStore} from "./stores/pm-app-store.ts";
-
-    function lazyImport(name) {
-      switch (name) {
-        case 'home': return import(
-          /* webpackChunkName: "pm-home" */
-          './pages/home/pm-home.html'
-        );
-        case 'group': return import(
-          /* webpackChunkName: "pm-group" */
-          './pages/group/pm-group.html'
-        );
-        case 'details': return import(
-          /* webpackChunkName: "pm-details" */
-          './pages/details/pm-details.html'
-        );
-        case 'not-found': return import(
-          /* webpackChunkName: "pm-not-found" */
-          './pages/not-found/pm-not-found.html'
-        );
-        default: return null;
-      }
-    }
-
     class PmApp extends Polymer.Element {
 
       static get is() { return 'pm-app'; }
@@ -158,14 +148,13 @@
             reflectToAttribute: true,
             observer: '_pageChanged',
           },
-          _store: Object,
-          _state: Object,
           routeData: Object,
           subroute: String,
           rootPath: {
             type: String,
             value: '/'
-          }
+          },
+          _state: Object,
         };
       }
 
@@ -178,19 +167,17 @@
       connectedCallback() {
         super.connectedCallback();
 
-        this._store = new PmAppStore();
-        this._store.connect(state => this._state = state);
+        this.addEventListener('action', event => {
+          const {name, payload} = event.detail;
+          this.$.store.dispatch(name, payload);
+        });
       }
 
       _routePageChanged(page) {
-        // Polymer 2.0 will call with `undefined` on initialization.
-        // Ignore until we are properly called with a string.
         if (page === undefined) {
           return;
         }
 
-        // If no page was found in the route data, page will be an empty string.
-        // Deault to 'home' in that case.
         this.page = page || 'home';
 
         // Close a non-persistent drawer when the page & route are changed.
@@ -200,11 +187,8 @@
       }
 
       _pageChanged(page) {
-        const result = lazyImport(page);
-
-        if (!result) {
-          this._showNotFound();
-        }
+        const resolvedPageUrl = this.resolveUrl(`pages/${page}/pm-${page}.html`);
+        Polymer.importHref(resolvedPageUrl, null, this._showNotFound.bind(this), true);
       }
 
       _showNotFound() {
@@ -212,7 +196,10 @@
       }
 
       _onMessage(e) {
-        this._store.sendMessage(e.detail.message);
+        this.dispatchEvent(new CustomEvent('action', {
+          bubbles: true,
+          detail: { name: "MESSAGE_SEND", payload: e.detail }
+        }));
       }
     }
 
