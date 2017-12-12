@@ -1,11 +1,11 @@
 {
   "entrypoint": "index.html",
-  "shell": "src/pm-app.html",
+  "shell": "src/cs-app.html",
   "fragments": [
-    "src/pages/home/pm-home.html",
-    "src/pages/group/pm-group.html",
-    "src/pages/details/pm-details.html",
-    "src/pages/not-found/pm-not-found.html"
+    "src/pages/home/cs-home.html",
+    "src/pages/group/cs-group.html",
+    "src/pages/details/cs-details.html",
+    "src/pages/not-found/cs-not-found.html"
   ],
   "sources": [
     "src/**/*",

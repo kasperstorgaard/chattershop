@@ -15,6 +15,8 @@
   },
   "scripts": {
     "build": "polymer build",
+    "chatterbot": "python ./server/chatterbot/run.py",
+    "rasa": "python -m rasa_nlu.server -c ./server/rasa/config_spacy.json",
     "lint": "npm run lint:javascript",
     "lint:javascript": "eslint . --ext js,html --ignore-path .gitignore",
     "postinstall": "bower install",
