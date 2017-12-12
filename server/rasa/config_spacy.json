@@ -1,0 +1,6 @@
+{
+  "pipeline": "spacy_sklearn",
+  "path" : "./server/rasa",
+  "data" : "./server/rasa/data/demo-rasa.json",
+  "cors_origins": ["*"]
+}
