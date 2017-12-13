@@ -4,3 +4,6 @@ dist/
 node_modules/
 logs
 db.sqlite3
+server/rasa/default
+server/rasa/models
+server/**/*.pyc

@@ -1,0 +1,73 @@
+slots:
+  category:
+    type: text
+  item:
+    type: text
+  price:
+    type: text
+  info:
+    type: text
+  matches:
+    type: list
+
+intents:
+ - greet
+ - affirm
+ - deny
+ - inform
+ - thankyou
+ - request_info
+
+entities:
+ - info
+ - price
+ - category
+ - item
+
+templates:
+  utter_greet:
+    - "hey there!"
+  utter_goodbye:
+    - "goodbye :("
+    - "Bye-bye"
+  utter_default:
+    - "default message"
+  utter_ack_dosearch: 
+    - "ok let me see what I can find"
+  utter_ack_findalternatives:
+    - "ok let me see what else there is"
+  utter_ask_category: 
+    - "what type of item are you looking for?"
+  utter_ask_helpmore:
+    - "is there anything more that I can help with?"
+  utter_ask_howcanhelp:
+    - "how can I help you?"
+  utter_ask_moreupdates: 
+    - "anything else you'd like to modify?"
+  utter_ask_price: 
+    - text: "in which price range?"
+      buttons:
+      - title: "cheap"
+        payload: "cheap"
+      - title: "expensive"
+        payload: "expensive"
+      - title: "doesn't matter'"
+        payload: "none"
+
+  utter_on_it: 
+    - "I'm on it"
+
+actions:
+  - utter_greet
+  - utter_goodbye
+  - utter_default
+  - utter_ack_dosearch
+  - utter_ack_findalternatives
+  - utter_ask_category
+  - utter_ask_helpmore
+  - utter_ask_howcanhelp
+  - utter_ask_moreupdates
+  - utter_ask_price
+  - utter_on_it
+  - bot.ActionSearchItems
+  - bot.ActionSuggest
