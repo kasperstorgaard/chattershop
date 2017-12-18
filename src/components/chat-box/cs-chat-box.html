@@ -22,6 +22,7 @@
       .text-box {
         display: flex;
         flex-basis: 100%;
+        justify-content: flex-end;
       }
 
       #textarea {
@@ -34,6 +35,10 @@
         display: flex;
         flex-wrap: wrap;
         flex-basis: 100%;
+        max-height: 40vh;
+        flex-direction: row-reverse;
+        margin-bottom: 1rem;
+        overflow-y: scroll;
       }
 
       .message {
@@ -57,7 +62,7 @@
         background: #dcd;
       }
     </style>
-    <div id="messages">
+    <div id="messages" hidden$=[[!messages.length]]>
       <template is="dom-repeat" items=[[messages]] as="message">
         <div class$="message [[_messageClass(userId, message)]]">
           <p>[[message.text]]</p>
@@ -170,7 +175,7 @@
       }
 
       _resize() {
-        this.$.messages
+        this.$.messages.scrollTop = Number.MAX_SAFE_INTEGER;
       }
     }
 
