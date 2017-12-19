@@ -21,5 +21,6 @@
     "dev": "polymer serve",
     "test": "polymer test",
     "test:integration": "polymer build # test that psk builds without error with the CLI"
-  }
+  },
+  "dependencies": {}
 }
