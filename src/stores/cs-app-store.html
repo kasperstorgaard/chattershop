@@ -4,7 +4,7 @@
 <dom-module id="cs-app-store">
   <script>
     class PmAppStore extends Polymer.Element {
-      static get is() { return 'cs-app-store'; }
+      static get is() {return 'cs-app-store';}
 
       static get properties() {
         return {
@@ -61,12 +61,25 @@
       
       _getResponse(text) {
         return this._client.textRequest(text)
-          .then(({result}) => result.fulfillment.speech);
+          .then(({result}) => {
+            const {speech, messages} = result.fulfillment;
+
+            return {
+              type: messages ? "card" : "simple",
+              text: speech,
+              messages
+            };
+          });
       }
 
-      _responseReceived(text) {
-        const idx = this.state.messages.findIndex(message => message.id)
-        this.push('state.messages', { userId: 'bot', text });
+      _responseReceived({type, text, messages}) {
+        this.push('state.messages', {
+          userId: 'bot',
+          type,
+          text,
+          messages
+        });
+
         this.set('state.waiting', false);
       }
     }

@@ -66,6 +66,11 @@
       <template is="dom-repeat" items=[[messages]] as="message">
         <div class$="message [[_messageClass(userId, message)]]">
           <p>[[message.text]]</p>
+          <ul hidden$=[[!_isCard(message.type)]]>
+            <template is="dom-repeat" items=[[message.messages]] as="card">
+              <li>[[card.title]]</li>
+            </template>
+          </ul>
         </div>
       </template>
       <div hidden$=[[!waiting]] class="message">
@@ -176,6 +181,10 @@
 
       _resize() {
         this.$.messages.scrollTop = Number.MAX_SAFE_INTEGER;
+      }
+
+      _isCard(type) {
+        return type === 'card';
       }
     }
 
