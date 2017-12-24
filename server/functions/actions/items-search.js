@@ -1,28 +1,16 @@
 const db = require('../db');
+const {generateCard} = require('./helpers');
 
-function generateCard(title, description) {
-  return {
+exports.get = function(params) {
+  const category = (params.category || [])[0];
 
+  if (!category) {
+    return {
+      fulfillmentText: `Sorry, Looks like we cant find any category matching that`
+    };
   }
-}
 
-function generateCard(data) {
-  return {
-    title: data.name,
-    subtitle: 'This is just a sample subtitle',
-    formatted_text: 'Body text can include unicode characters including emoji 📱.',
-    image: {
-      image_uri: 'https://developers.google.com/actions/images/badges/XPM_BADGING_GoogleAssistant_VER.png'
-    },
-    buttons: [{
-      'title': 'This is a button',
-      'open_uri_action': {'uri': 'https://assistant.google.com/'}
-    }]
-  };
-}
-
-exports.getResponse = function() {
-  const itemsResponse = db.getItems()
+  const itemsResponse = db.getItemsBy('category', category);
 
   return itemsResponse.then(items => {
 
@@ -31,8 +19,11 @@ exports.getResponse = function() {
       basic_card: generateCard(item.data)
     }));
 
+    const text = messages.length ? `Here's all the ${category} items I could find: ` :
+      `I'm sorry, I couldn't find any ${category} items for you.`
+
     return {
-      fulfillmentText: `Here's what I Found: `,
+      fulfillmentText: text,
       fulfillmentMessages: messages
     };
   });

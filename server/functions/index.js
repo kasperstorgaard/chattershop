@@ -1,7 +1,7 @@
 'use strict';
 
 const functions = require('firebase-functions'); // Cloud Functions for Firebase library
-const {itemsSearch} = require('./actions/index');
+const actions = require('./actions/index');
 
 exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, response) => {
   if (!request.body.queryResult) {
@@ -16,28 +16,29 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
 });
 
 function sendResponse(response, payload) {
+  if (!payload) {
+    return response.status(400)
+      .end('No Matching Action Response Found');
+  }
+
   if (typeof payload === 'string') {
     return response.json({fulfillmentText: payload});
-  } else {
-    return response.json(payload);
   }
+
+  return response.json(payload);
 }
 
 function processRequest(request, response) {
-  const {action} = request.body.queryResult;
+  const {action, parameters} = request.body.queryResult;
 
-  const responseData = Promise.resolve(getResponseData(action));
+  const responseData = Promise.resolve(getResponseData(action, parameters));
   return responseData.then(data => sendResponse(response, data));
 }
 
-function getResponseData(action) {
+function getResponseData(action, params) {
   switch (action) {
-    case 'input.welcome': return 'Hello, Welcome to my Dialogflow agent!';
-    case 'input.unknown': return `I'm having trouble, can you try that again?`;
-    case 'items.search': return itemsSearch.getResponse()
-
-    default: return {
-      fulfillmentText: 'This is from Dialogflow\'s Cloud Functions for Firebase editor! :-)'
-    };
+    case 'items.all': return actions.itemsAll.get()
+    case 'items.search': return actions.itemsSearch.get(params)
+    default: return undefined;
   }
 }
