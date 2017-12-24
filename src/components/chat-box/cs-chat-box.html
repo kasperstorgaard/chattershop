@@ -44,6 +44,7 @@
 
       .message {
         display: flex;
+        flex-wrap: wrap;
         flex-basis: 100%;
         margin: 0 0 0.7rem;
       }
@@ -52,19 +53,28 @@
         justify-content: flex-end;
       }
 
-      .message p {
+      .message .inner {
         margin: 0;
       }
 
       .message .inner {
+        display: flex;
+      }
+
+      .message .inner {
         display: inline-block;
-        padding: 0.7rem 1rem;
         margin: 0;
+        padding: 0.7rem 1rem;
         background: #ccd;
       }
 
       .message.self .inner {
         background: #dcd;
+      }
+
+      .message .cards {
+        display: flex;
+        width: 100%;
       }
 
       .message cs-chat-card {
@@ -75,8 +85,8 @@
     <div id="messages" hidden$=[[!messages.length]]>
       <template is="dom-repeat" items=[[messages]] as="message">
         <div class$="message [[_messageClass(userId, message)]]">
-          <div class="inner">
-            <p>[[message.text]]</p>
+          <div class="inner">[[message.text]]</div>
+          <div class="cards" hidden$=[[!message.messages.length]]>
             <template is="dom-repeat" items=[[message.messages]] as="card">
               <cs-chat-card
                 title=[[card.title]]></cs-chat-card>
