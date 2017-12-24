@@ -67,7 +67,7 @@
             return {
               type: messages ? "card" : "simple",
               text: speech,
-              messages
+              messages: messages.filter(message => message.title)
             };
           });
       }

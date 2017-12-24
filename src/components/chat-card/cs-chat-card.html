@@ -1,0 +1,28 @@
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../shared/cs-styles.html">
+
+<dom-module id="cs-chat-card">
+  <template>
+    <style include="cs-styles">
+      :host {
+        display: inline-block;
+        padding: 0 0.5rem;
+      }
+    </style>
+    [[title]]
+  </template>
+
+  <script>
+    class PmChatCard extends Polymer.Element {
+      static get is() { return 'cs-chat-card'; }
+
+      static get properties() {
+        return {
+          title: Text
+        }
+      }
+    }
+
+    window.customElements.define(PmChatCard.is, PmChatCard);
+  </script>
+</dom-module>

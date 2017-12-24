@@ -3,6 +3,7 @@
 <link rel="import" href="../../../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../../../bower_components/polymer/lib/elements/dom-repeat.html">
 <link rel="import" href="../../shared/cs-styles.html">
+<link rel="import" href="../chat-card/cs-chat-card.html">
 
 <dom-module id="cs-chat-box">
   <template>
@@ -52,25 +53,35 @@
       }
 
       .message p {
+        margin: 0;
+      }
+
+      .message .inner {
         display: inline-block;
         padding: 0.7rem 1rem;
         margin: 0;
         background: #ccd;
       }
 
-      .message.self p {
+      .message.self .inner {
         background: #dcd;
+      }
+
+      .message cs-chat-card {
+        background: #dde;
+        margin-top: 0.5rem;
       }
     </style>
     <div id="messages" hidden$=[[!messages.length]]>
       <template is="dom-repeat" items=[[messages]] as="message">
         <div class$="message [[_messageClass(userId, message)]]">
-          <p>[[message.text]]</p>
-          <ul hidden$=[[!_isCard(message.type)]]>
+          <div class="inner">
+            <p>[[message.text]]</p>
             <template is="dom-repeat" items=[[message.messages]] as="card">
-              <li>[[card.title]]</li>
+              <cs-chat-card
+                title=[[card.title]]></cs-chat-card>
             </template>
-          </ul>
+          </div>
         </div>
       </template>
       <div hidden$=[[!waiting]] class="message">
@@ -180,7 +191,7 @@
       }
 
       _resize() {
-        this.$.messages.scrollTop = Number.MAX_SAFE_INTEGER;
+        setTimeout(() => this.$.messages.scrollTop = Number.MAX_SAFE_INTEGER);
       }
 
       _isCard(type) {
